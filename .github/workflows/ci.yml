@@ -15,9 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        # node-version: [14.x, 16.x, 18.x]
         node-version: [16.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
       - uses: actions/checkout@v3
@@ -30,3 +28,13 @@ jobs:
       - run: npm i @nestjs/cli
       - run: npm run build --if-present
       - run: npm test
+
+      - uses: mr-smithers-excellent/docker-build-push@v5
+        name: Build & push Docker image
+        with:
+          image: ronalmog/api-test
+          tags: latest
+          registry: registry.gitlab.com
+          dockerfile: Dockerfile.ci
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
