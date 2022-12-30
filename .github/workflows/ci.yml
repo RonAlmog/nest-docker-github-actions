@@ -35,6 +35,6 @@ jobs:
           image: ronalmog/api-test
           tags: latest
           registry: registry.gitlab.com
-          dockerfile: Dockerfile.ci
+          dockerfile: Dockerfile
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
