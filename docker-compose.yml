@@ -1,0 +1,35 @@
+version: '3'
+services:
+  app:
+    container_name: test-api
+    image: registry.gitlab.com/ronalmog/action-test
+    restart: always
+    build: .
+    command: 'npm run prod'
+    environment:
+      - PORT: 80
+      - VIRTUAL_HOST: test.plenta.ca
+      - LETSENCRYPT_HOST: test.plenta.ca
+      - LETSENCRYPT_EMAIL: ron8132@gmail.com
+      - MONGODB_URI: ${MONGODB_URI}
+    expose:
+      - 80
+    networks:
+      - local_net
+
+  watchtower:
+    image: containerrr/watchtower
+    name: watchtower
+    environment:
+      - REPO_USER: ${REPO_USER}
+      - REPO_PASS: ${REPO_PASS}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - $HOME/.docker/config.json:config.json
+    command: --interval 30
+    # if you login from server to docker repo, then credentials are stored in $HOME/.docker/config.json, and watchtower will use them.
+
+networks:
+  default:
+    external:
+      name: nginx-proxy
